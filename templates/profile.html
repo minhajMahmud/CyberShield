@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width: 560px;">
+  <h1 class="fw-bold mb-4"><i class="bi bi-person-circle cs-text-accent"></i> My Profile</h1>
+  <div class="cs-card p-4">
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" class="form-control" value="{{ current_user.username }}" disabled>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" value="{{ current_user.email }}" disabled>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-control" name="full_name" value="{{ current_user.full_name or '' }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Role</label>
+        <input type="text" class="form-control" value="{{ current_user.role }}" disabled>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">2FA Status</label>
+        <input type="text" class="form-control" value="{{ 'Enabled' if current_user.is_2fa_enabled else 'Disabled' }}" disabled>
+      </div>
+      <button type="submit" class="btn btn-cs-accent w-100">Save Changes</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

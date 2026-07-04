@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Secure File Storage{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="fw-bold mb-1"><i class="bi bi-file-earmark-lock2-fill cs-text-accent"></i> Secure File Storage</h1>
+  <p class="text-muted mb-4">Files are encrypted client-side-equivalent with AES-256-GCM before being written to disk. Only you can decrypt your own files.</p>
+
+  <div class="cs-card p-4 mb-4">
+    <form method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <div class="row g-2 align-items-end">
+        <div class="col-md-8">
+          <label class="form-label">Choose a file to encrypt &amp; upload</label>
+          <input type="file" class="form-control" name="file" required>
+        </div>
+        <div class="col-md-4">
+          <button type="submit" class="btn btn-cs-accent w-100"><i class="bi bi-upload"></i> Encrypt &amp; Upload</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="cs-card p-4">
+    <h5 class="mb-3">Your Files</h5>
+    {% if files %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>File Name</th><th>Type</th><th>Size</th><th>Uploaded</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for f in files %}
+          <tr>
+            <td><i class="bi bi-file-earmark-lock-fill text-success"></i> {{ f.original_filename }}</td>
+            <td><span class="badge bg-secondary">{{ f.file_type }}</span></td>
+            <td>{{ (f.file_size / 1024) | round(1) }} KB</td>
+            <td class="text-muted small">{{ f.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>
+              <a href="{{ url_for('files.download', file_id=f.id) }}" class="btn btn-sm btn-outline-cs"><i class="bi bi-download"></i> Download</a>
+              <form method="POST" action="{{ url_for('files.delete', file_id=f.id) }}" class="d-inline" onsubmit="return confirm('Delete this file permanently?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <p class="text-muted mb-0">You haven't uploaded any files yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

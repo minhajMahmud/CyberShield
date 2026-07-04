@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Logging Out{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="cs-card p-5 mx-auto" style="max-width: 500px;">
+        <div class="mb-4">
+            <i class="bi bi-shield-lock-fill cs-text-accent" style="font-size: 4rem;"></i>
+        </div>
+        <h2 class="fw-bold mb-3">Logging Out...</h2>
+        <p class="text-muted mb-4">
+            <i class="bi bi-arrow-clockwise" style="animation: spin 1s linear infinite;"></i>
+            Clearing your session securely
+        </p>
+        <div class="progress" style="height: 6px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="logoutProgress"></div>
+        </div>
+        <p class="small text-muted mt-3 mb-0">You will be redirected shortly...</p>
+    </div>
+</div>
+
+<style>
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Clear session from localStorage
+    if (typeof window.cybershieldClearSession === 'function') {
+        window.cybershieldClearSession();
+        console.log('[Logout] Session cleared from localStorage');
+    }
+
+    // Animate progress bar
+    let progress = 0;
+    const progressBar = document.getElementById('logoutProgress');
+    const interval = setInterval(() => {
+        progress += 5;
+        progressBar.style.width = progress + '%';
+        if (progress >= 100) {
+            clearInterval(interval);
+            // Redirect to home page
+            window.location.href = '/';
+        }
+    }, 50);
+</script>
+{% endblock %}

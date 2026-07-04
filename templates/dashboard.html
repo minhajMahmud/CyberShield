@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <!-- Header -->
+  <div class="mb-4">
+    <h1 class="fw-bold mb-1">Welcome back, {{ current_user.full_name or current_user.username }} 👋</h1>
+    <p class="text-muted mb-0">Real-time overview of your CyberShield account</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row g-4 mb-4" id="statsCards">
+    <!-- 2FA Status Card -->
+    <div class="col-md-3 col-sm-6">
+      <div class="cs-card p-4 h-100">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="text-muted mb-0 text-uppercase small">2FA Status</h6>
+          <i class="bi bi-shield-{{ 'check' if current_user.is_2fa_enabled else 'exclamation' }}-fill"
+            style="font-size: 1.5rem; color: {{ 'var(--cs-accent)' if current_user.is_2fa_enabled else '#f0a020' }};"></i>
+        </div>
+        <h2 class="fw-bold mb-0" style="color: {{ 'var(--cs-accent)' if current_user.is_2fa_enabled else '#f0a020' }};">
+          {{ 'ON' if current_user.is_2fa_enabled else 'OFF' }}
+        </h2>
+        <p class="small text-muted mb-0 mt-2">
+          {% if current_user.is_2fa_enabled %}
+          <i class="bi bi-check-circle-fill text-success"></i> Protected with Google Authenticator
+          {% else %}
+          <i class="bi bi-exclamation-triangle-fill" style="color: #f0a020;"></i> Enable for extra security
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <!-- Encrypted Files Card -->
+    <div class="col-md-3 col-sm-6">
+      <div class="cs-card p-4 h-100">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="text-muted mb-0 text-uppercase small">Encrypted Files</h6>
+          <i class="bi bi-file-earmark-lock2-fill" style="font-size: 1.5rem; color: var(--cs-accent);"></i>
+        </div>
+        <h2 class="fw-bold mb-0" style="color: var(--cs-accent);" id="fileCount">{{ file_count }}</h2>
+        <p class="small text-muted mb-0 mt-2">
+          <i class="bi bi-arrow-up-circle-fill text-info"></i> Securely stored
+        </p>
+      </div>
+    </div>
+
+    <!-- Digital Signatures Card -->
+    <div class="col-md-3 col-sm-6">
+      <div class="cs-card p-4 h-100">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="text-muted mb-0 text-uppercase small">Digital Signatures</h6>
+          <i class="bi bi-pen-fill" style="font-size: 1.5rem; color: var(--cs-accent);"></i>
+        </div>
+        <h2 class="fw-bold mb-0" style="color: var(--cs-accent);" id="signatureCount">{{ signature_count }}</h2>
+        <p class="small text-muted mb-0 mt-2">
+          <i class="bi bi-file-earmark-check-fill text-success"></i> Generated & verified
+        </p>
+      </div>
+    </div>
+
+    <!-- Password Checks Card -->
+    <div class="col-md-3 col-sm-6">
+      <div class="cs-card p-4 h-100">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="text-muted mb-0 text-uppercase small">Password Checks</h6>
+          <i class="bi bi-key-fill" style="font-size: 1.5rem; color: var(--cs-accent);"></i>
+        </div>
+        <h2 class="fw-bold mb-0" style="color: var(--cs-accent);" id="passwordCheckCount">{{ password_check_count }}
+        </h2>
+        <p class="small text-muted mb-0 mt-2">
+          <i class="bi bi-shield-check text-info"></i> Strength analyzed
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+      <a href="{{ url_for('files.storage') }}" class="btn btn-outline-cs w-100 py-2">
+        <i class="bi bi-cloud-upload"></i> Upload Files
+      </a>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <a href="{{ url_for('signature.signature_home') }}" class="btn btn-outline-cs w-100 py-2">
+        <i class="bi bi-pen"></i> Create Signature
+      </a>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <a href="{{ url_for('password.password_checker_page') }}" class="btn btn-outline-cs w-100 py-2">
+        <i class="bi bi-key"></i> Check Password
+      </a>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <a href="{{ url_for('twofa.settings') }}" class="btn btn-outline-cs w-100 py-2">
+        <i class="bi bi-shield-lock"></i> 2FA Settings
+      </a>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="cs-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0"><i class="bi bi-activity cs-text-accent"></i> Recent Activity</h5>
+      <button class="btn btn-sm btn-outline-cs" onclick="refreshActivity()">
+        <i class="bi bi-arrow-clockwise" id="refreshIcon"></i> Refresh
+      </button>
+    </div>
+    {% if recent_activity %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" id="activityTable">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Details</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in recent_activity %}
+          <tr>
+            <td><span class="badge bg-secondary">{{ log.action }}</span></td>
+            <td class="text-muted small">{{ log.description or '—' }}</td>
+            <td>
+              <span
+                class="badge {{ 'bg-success' if log.status=='success' else ('bg-danger' if log.status=='failure' else 'bg-warning') }}">
+                {{ log.status }}
+              </span>
+            </td>
+            <td class="text-muted small">{{ log.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0 text-center py-4">
+      <i class="bi bi-inbox"></i> No activity yet. Start using CyberShield features!
+    </p>
+    {% endif %}
+  </div>
+
+  <!-- Last Updated Info -->
+  <div class="text-center mt-3">
+    <small class="text-muted">
+      <i class="bi bi-clock"></i> Last updated: <span id="lastUpdated">{{ current_time }}</span>
+    </small>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Load on page load
+  document.addEventListener('DOMContentLoaded', function () {
+    // Update last updated time
+    updateLastUpdated();
+
+    // Auto-refresh stats every 30 seconds
+    setInterval(refreshStats, 30000);
+  });
+
+  // Update last updated timestamp
+  function updateLastUpdated() {
+    const now = new Date();
+    const formatted = now.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    document.getElementById('lastUpdated').textContent = formatted;
+  }
+
+  // Refresh activity table
+  function refreshActivity() {
+    const icon = document.getElementById('refreshIcon');
+    icon.classList.add('rotating');
+
+    // Reload the page to fetch new data
+    setTimeout(() => {
+      location.reload();
+    }, 500);
+  }
+
+  // Auto-refresh stats (simulated - in production would use AJAX)
+  function refreshStats() {
+    updateLastUpdated();
+    console.log('Stats refreshed at:', new Date().toLocaleTimeString());
+  }
+
+  // Add rotation animation class
+  const style = document.createElement('style');
+  style.textContent = `
+  .rotating {
+    animation: rotate 0.5s linear;
+  }
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+`;
+  document.head.appendChild(style);
+</script>
+{% endblock %}

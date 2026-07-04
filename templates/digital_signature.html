@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Digital Signature{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="fw-bold mb-1"><i class="bi bi-pen-fill cs-text-accent"></i> Digital Signature Verification</h1>
+  <p class="text-muted mb-4">Sign documents, images, or any file type with RSA-2048 + SHA-256, or verify a file against
+    an existing signature to detect tampering.</p>
+
+  <div class="row g-4 mb-4">
+    <div class="col-lg-6">
+      <div class="cs-card p-4 h-100">
+        <h5><i class="bi bi-file-earmark-plus-fill cs-text-accent"></i> Sign a File</h5>
+        <p class="text-muted small mb-3">✅ All file types supported: PDF, DOCX, PNG, JPEG, JPG, MP4, ZIP, etc.</p>
+        <form method="POST" action="{{ url_for('signature.sign') }}" enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <div class="mb-3">
+            <input type="file" class="form-control" name="document" required>
+          </div>
+          <button type="submit" class="btn btn-cs-accent w-100"><i class="bi bi-pen"></i> Generate Signature</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="cs-card p-4 h-100">
+        <h5><i class="bi bi-patch-check-fill cs-text-accent"></i> Verify a File</h5>
+        <p class="text-muted small mb-3">Upload the exact same file, signature, and public key to verify integrity.</p>
+        <form method="POST" action="{{ url_for('signature.verify') }}" enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <div class="mb-2">
+            <label class="form-label small">File (must match signed file exactly)</label>
+            <input type="file" class="form-control form-control-sm" name="document" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Signature (base64)</label>
+            <textarea class="form-control form-control-sm" name="signature_value" rows="2" required></textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Public Key (PEM)</label>
+            <textarea class="form-control form-control-sm" name="public_key" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-outline-cs w-100"><i class="bi bi-shield-check"></i> Verify
+            Signature</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="cs-card p-4">
+    <h5 class="mb-3">Your Signed Files</h5>
+    {% if signatures %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>SHA-256 (truncated)</th>
+            <th>Status</th>
+            <th>Signed</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in signatures %}
+          <tr>
+            <td>{{ s.document_name }}</td>
+            <td><code>{{ s.document_hash[:16] }}...</code></td>
+            <td><span class="badge bg-success">{{ s.status }}</span></td>
+            <td class="text-muted small">{{ s.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td><a href="{{ url_for('signature.download_signature', sig_id=s.id) }}"
+                class="btn btn-sm btn-outline-cs"><i class="bi bi-download"></i></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No files signed yet. Try signing a document, image, or any file above!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

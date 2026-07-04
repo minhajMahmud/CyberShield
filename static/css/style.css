@@ -1,0 +1,339 @@
+/* ==========================================================
+   CyberShield - style.css
+   A dark, cybersecurity-themed design system built on Bootstrap 5.
+   ========================================================== */
+
+:root {
+  --cs-bg: #0b1120;
+  --cs-surface: #131b2e;
+  --cs-surface-2: #1a2438;
+  --cs-accent: #00e0a4;
+  --cs-accent-dark: #00b485;
+  --cs-text: #e6ecf5;
+  --cs-text-muted: #9aa7bd;
+  --cs-border: #24304a;
+}
+
+body {
+  background-color: var(--cs-bg);
+  color: var(--cs-text);
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Navbar */
+.cs-navbar {
+  background-color: var(--cs-surface);
+  border-bottom: 1px solid var(--cs-border);
+}
+.cs-navbar .nav-link {
+  color: var(--cs-text-muted);
+}
+.cs-navbar .nav-link:hover {
+  color: var(--cs-accent);
+}
+
+/* Hero */
+.cs-hero {
+  background: linear-gradient(135deg, #0b1120 0%, #101a30 60%, #0d2e28 100%);
+  border-bottom: 1px solid var(--cs-border);
+}
+.cs-badge {
+  background-color: rgba(0, 224, 164, 0.12);
+  color: var(--cs-accent);
+  border: 1px solid rgba(0, 224, 164, 0.35);
+  padding: .5rem 1rem;
+  border-radius: 999px;
+  font-size: .8rem;
+}
+
+/* Buttons */
+.btn-cs-accent {
+  background-color: var(--cs-accent);
+  border-color: var(--cs-accent);
+  color: #04140f;
+  font-weight: 600;
+}
+.btn-cs-accent:hover {
+  background-color: var(--cs-accent-dark);
+  border-color: var(--cs-accent-dark);
+  color: #04140f;
+}
+.btn-outline-cs {
+  border: 1px solid var(--cs-accent);
+  color: var(--cs-accent);
+  background: transparent;
+  font-weight: 500;
+}
+.btn-outline-cs:hover {
+  background-color: var(--cs-accent);
+  color: #04140f;
+}
+.btn-outline-cs i {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.btn-link {
+  color: var(--cs-accent);
+}
+.btn-link:hover {
+  color: var(--cs-accent-dark);
+}
+
+/* Cards */
+.cs-card {
+  background-color: var(--cs-surface);
+  border: 1px solid var(--cs-border);
+  border-radius: 14px;
+  transition: transform .15s ease, border-color .15s ease;
+}
+.cs-card:hover {
+  border-color: var(--cs-accent);
+}
+.cs-icon {
+  font-size: 2.2rem;
+  color: var(--cs-accent);
+}
+.cs-text-accent {
+  color: var(--cs-accent);
+}
+
+/* Check list */
+.cs-check-list li {
+  padding: .4rem 0;
+  color: var(--cs-text-muted);
+}
+.cs-check-list i {
+  color: var(--cs-accent);
+  margin-right: .5rem;
+}
+
+/* Forms */
+.form-control,
+.form-select,
+textarea {
+  background-color: var(--cs-surface-2);
+  border: 1px solid var(--cs-border);
+  color: var(--cs-text);
+}
+.form-control:focus,
+textarea:focus {
+  background-color: var(--cs-surface-2);
+  border-color: var(--cs-accent);
+  box-shadow: 0 0 0 .2rem rgba(0, 224, 164, 0.15);
+  color: var(--cs-text);
+}
+.form-label {
+  color: var(--cs-text-muted);
+  font-weight: 500;
+}
+.form-control:disabled {
+  background-color: var(--cs-surface);
+  color: var(--cs-text-muted);
+}
+
+/* Tables */
+.table {
+  color: var(--cs-text);
+}
+.table-hover > tbody > tr:hover > * {
+  background-color: var(--cs-surface-2);
+  color: var(--cs-text);
+}
+
+/* Alert boxes - ensure text is visible */
+.alert {
+  color: var(--cs-text);
+}
+.alert-info {
+  background-color: rgba(13, 202, 240, 0.1);
+  border-color: rgba(13, 202, 240, 0.3);
+  color: #9ed5f5;
+}
+.alert-success {
+  background-color: rgba(25, 135, 84, 0.1);
+  border-color: rgba(25, 135, 84, 0.3);
+  color: #9fffcb;
+}
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-color: rgba(255, 193, 7, 0.3);
+  color: #ffe69c;
+}
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  border-color: rgba(220, 53, 69, 0.3);
+  color: #ff9999;
+}
+
+/* Ensure all text elements are visible */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--cs-text) !important;
+}
+p, li, ol, ul {
+  color: var(--cs-text);
+}
+.small, small {
+  color: var(--cs-text-muted) !important;
+}
+
+/* Text utility classes */
+.text-muted {
+  color: var(--cs-text-muted) !important;
+}
+
+/* Force visibility for specific elements */
+.cs-card .text-uppercase {
+  color: var(--cs-text-muted) !important;
+  opacity: 0.9;
+}
+
+/* Ensure Bootstrap text colors work in dark theme */
+.text-success {
+  color: #9fffcb !important;
+}
+.text-info {
+  color: #4cc9f0 !important;
+}
+.text-warning {
+  color: #ffe69c !important;
+}
+.text-danger {
+  color: #ff9999 !important;
+}
+
+/* Footer */
+.cs-footer {
+  background-color: var(--cs-surface);
+  border-top: 1px solid var(--cs-border);
+  color: var(--cs-text-muted);
+}
+
+/* Dashboard cards and stats */
+.cs-stat-card {
+  background-color: var(--cs-surface);
+  border: 1px solid var(--cs-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.cs-stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--cs-accent);
+  line-height: 1;
+}
+.cs-stat-label {
+  color: var(--cs-text-muted);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Ensure card text visibility in dark mode */
+.cs-card h2, .cs-card h3, .cs-card h4, .cs-card h5, .cs-card h6 {
+  color: var(--cs-text) !important;
+}
+.cs-card small, .cs-card .small {
+  color: var(--cs-text-muted) !important;
+}
+.cs-card strong {
+  color: var(--cs-text) !important;
+}
+
+/* Dashboard specific improvements */
+.cs-card .text-uppercase {
+  color: var(--cs-text-muted) !important;
+  font-weight: 600;
+}
+
+/* Number badges and counters */
+.badge {
+  font-weight: 600;
+  padding: 0.5em 0.75em;
+}
+.badge-primary {
+  background-color: var(--cs-accent);
+  color: #04140f;
+}
+
+/* Progress bar strength colors */
+.progress {
+  background-color: var(--cs-surface-2);
+}
+.bar-weak { background-color: #e5484d; }
+.bar-fair { background-color: #f0a020; }
+.bar-good { background-color: #f0d020; }
+.bar-strong { background-color: #4cc9f0; }
+.bar-very-strong { background-color: var(--cs-accent); }
+
+code {
+  color: var(--cs-accent);
+}
+
+/* Light Theme */
+body.light-theme {
+  --cs-bg: #f5f7fa;
+  --cs-surface: #ffffff;
+  --cs-surface-2: #f8f9fb;
+  --cs-accent: #00b485;
+  --cs-accent-dark: #008c68;
+  --cs-text: #1a202c;
+  --cs-text-muted: #4a5568;
+  --cs-border: #e2e8f0;
+  
+  background-color: var(--cs-bg);
+  color: var(--cs-text);
+}
+
+body.light-theme .cs-navbar {
+  background-color: var(--cs-surface);
+  border-bottom-color: var(--cs-border);
+}
+
+body.light-theme .cs-navbar .nav-link {
+  color: var(--cs-text-muted);
+}
+
+body.light-theme .cs-card {
+  background-color: var(--cs-surface);
+  border-color: var(--cs-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .form-control,
+body.light-theme .form-select,
+body.light-theme textarea {
+  background-color: var(--cs-surface-2);
+  border-color: var(--cs-border);
+  color: var(--cs-text);
+}
+
+body.light-theme .table {
+  color: var(--cs-text);
+}
+
+body.light-theme .alert-info {
+  background-color: rgba(13, 110, 253, 0.1);
+  border-color: rgba(13, 110, 253, 0.2);
+  color: #084298;
+}
+
+body.light-theme .alert-success {
+  background-color: rgba(25, 135, 84, 0.1);
+  border-color: rgba(25, 135, 84, 0.2);
+  color: #0a3622;
+}
+
+body.light-theme .alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-color: rgba(255, 193, 7, 0.2);
+  color: #664d03;
+}
+
+body.light-theme .alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  border-color: rgba(220, 53, 69, 0.2);
+  color: #842029;
+}

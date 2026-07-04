@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="fw-bold mb-4"><i class="bi bi-speedometer2 cs-text-accent"></i> Admin Dashboard</h1>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-3"><div class="cs-card p-3 text-center"><h3>{{ stats.total_users }}</h3><small class="text-muted">Total Users</small></div></div>
+    <div class="col-md-3"><div class="cs-card p-3 text-center"><h3>{{ stats.total_files }}</h3><small class="text-muted">Files Stored</small></div></div>
+    <div class="col-md-3"><div class="cs-card p-3 text-center"><h3>{{ stats.total_signatures }}</h3><small class="text-muted">Signatures</small></div></div>
+    <div class="col-md-3"><div class="cs-card p-3 text-center"><h3>{{ stats.users_with_2fa }}</h3><small class="text-muted">Users with 2FA</small></div></div>
+  </div>
+
+  <div class="cs-card p-4 mb-4">
+    <h5 class="mb-3">User Management</h5>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>2FA</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for u in users %}
+          <tr>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td><span class="badge {{ 'bg-dark' if u.role=='admin' else 'bg-secondary' }}">{{ u.role }}</span></td>
+            <td>{{ '✅' if u.is_2fa_enabled else '—' }}</td>
+            <td><span class="badge {{ 'bg-success' if u.is_active else 'bg-danger' }}">{{ 'active' if u.is_active else 'disabled' }}</span></td>
+            <td>
+              <form method="POST" action="{{ url_for('admin.toggle_active', user_id=u.id) }}" class="d-inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-sm btn-outline-cs">{{ 'Disable' if u.is_active else 'Enable' }}</button>
+              </form>
+              {% if u.role != 'admin' %}
+              <form method="POST" action="{{ url_for('admin.make_admin', user_id=u.id) }}" class="d-inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-sm btn-outline-dark">Make Admin</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cs-card p-4">
+    <h5 class="mb-3">System-Wide Activity Log</h5>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover align-middle">
+        <thead><tr><th>User ID</th><th>Action</th><th>IP</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+        {% for log in recent_logs %}
+          <tr>
+            <td>{{ log.user_id or '—' }}</td>
+            <td><span class="badge bg-secondary">{{ log.action }}</span></td>
+            <td class="text-muted small">{{ log.ip_address }}</td>
+            <td><span class="badge {{ 'bg-success' if log.status=='success' else ('bg-danger' if log.status=='failure' else 'bg-warning') }}">{{ log.status }}</span></td>
+            <td class="text-muted small">{{ log.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

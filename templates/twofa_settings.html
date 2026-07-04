@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}2FA Settings{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width: 650px;">
+  <h1 class="fw-bold mb-1"><i class="bi bi-shield-check cs-text-accent"></i> Two-Factor Authentication (2FA)</h1>
+  <p class="text-muted mb-4">আপনার অ্যাকাউন্টে অতিরিক্ত নিরাপত্তা যোগ করুন - Add an extra security layer</p>
+
+  <div class="cs-card p-4">
+    {% if current_user.is_2fa_enabled %}
+    <!-- 2FA Enabled State -->
+    <div class="alert alert-success mb-4">
+      <h5 class="mb-2"><i class="bi bi-check-circle-fill"></i> 2FA চালু আছে (Enabled)</h5>
+      <p class="mb-0 small">আপনার অ্যাকাউন্ট Google Authenticator দিয়ে সুরক্ষিত।</p>
+      <p class="mb-0 small">Your account is protected with Google Authenticator.</p>
+    </div>
+
+    <div class="alert alert-info mb-3">
+      <p class="mb-1"><strong><i class="bi bi-info-circle"></i> লগইন করার সময়:</strong></p>
+      <ol class="mb-0 ps-3">
+        <li>Username এবং Password দিন</li>
+        <li>Google Authenticator app খুলুন</li>
+        <li>6-digit code টি লিখুন</li>
+      </ol>
+    </div>
+
+    <form method="POST" action="{{ url_for('twofa.disable') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <button type="submit" class="btn btn-outline-danger w-100"
+        onclick="return confirm('আপনি কি নিশ্চিত 2FA বন্ধ করতে চান? Are you sure you want to disable 2FA?')">
+        <i class="bi bi-shield-x"></i> 2FA বন্ধ করুন (Disable 2FA)
+      </button>
+    </form>
+    {% else %}
+    <!-- 2FA Setup Instructions -->
+    <div class="alert alert-warning mb-4">
+      <h5 class="mb-2"><i class="bi bi-exclamation-triangle-fill"></i> 2FA বন্ধ আছে (Disabled)</h5>
+      <p class="mb-0 small">আপনার অ্যাকাউন্ট আরো সুরক্ষিত করতে 2FA চালু করুন।</p>
+    </div>
+
+    <h5 class="mb-3"><i class="bi bi-1-circle-fill cs-text-accent"></i> Google Authenticator App ইনস্টল করুন</h5>
+    <p class="small text-muted mb-3">
+      আপনার ফোনে Google Authenticator অথবা Authy app ডাউনলোড করুন।
+    </p>
+
+    <h5 class="mb-3"><i class="bi bi-2-circle-fill cs-text-accent"></i> এই QR Code টি স্ক্যান করুন</h5>
+    <div class="text-center mb-4 p-3"
+      style="background: white; border-radius: 10px; display: inline-block; margin-left: auto; margin-right: auto; display: block; width: fit-content;">
+      <img src="{{ qr_code }}" alt="2FA QR Code" style="width: 200px; height: 200px;">
+      <p class="small text-dark mt-2 mb-0"><i class="bi bi-phone"></i> Open Google Authenticator → Scan</p>
+    </div>
+
+    <h5 class="mb-3"><i class="bi bi-3-circle-fill cs-text-accent"></i> App থেকে 6-digit Code লিখুন</h5>
+    <p class="small text-muted mb-3">
+      Google Authenticator app এ "CyberShield" এর নিচে যে 6 digit number দেখাচ্ছে, সেটি এখানে লিখুন।
+    </p>
+
+    <form method="POST" action="{{ url_for('twofa.enable') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div class="mb-3">
+        <label class="form-label fw-bold">6-Digit Code from App:</label>
+        <input type="text" class="form-control text-center fs-3 fw-bold" name="otp_code" maxlength="6"
+          pattern="[0-9]{6}" placeholder="000000" required style="letter-spacing: 0.5rem;">
+        <div class="form-text text-center mt-2">
+          <i class="bi bi-clock"></i> Code প্রতি 30 সেকেন্ডে পরিবর্তন হয়
+        </div>
+      </div>
+      <button type="submit" class="btn btn-cs-accent w-100 py-2 fw-bold">
+        <i class="bi bi-shield-check"></i> 2FA চালু করুন (Enable 2FA)
+      </button>
+    </form>
+
+    <div class="alert alert-info mt-4 mb-0">
+      <p class="mb-0 small"><strong><i class="bi bi-lightbulb"></i> মনে রাখবেন:</strong> 2FA চালু করার পর প্রতিবার লগইন
+        করতে Google Authenticator থেকে code লাগবে।</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

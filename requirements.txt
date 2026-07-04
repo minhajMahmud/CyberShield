@@ -1,0 +1,14 @@
+Flask==3.0.3
+Flask-Login==0.6.3
+Flask-Bcrypt==1.0.1
+Flask-Mail==0.9.1
+Flask-SQLAlchemy==3.1.1
+Flask-WTF==1.2.1
+PyMySQL==1.1.1
+cryptography==42.0.8
+pycryptodome==3.20.0
+pyotp==2.9.0
+qrcode==7.4.2
+python-dotenv==1.0.1
+email-validator==2.1.1
+Pillow==10.3.0

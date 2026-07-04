@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="cs-hero text-white">
+  <div class="container py-5 text-center">
+    <span class="badge cs-badge mb-3"><i class="bi bi-lock-fill"></i> Enterprise-Grade Security, Student-Built</span>
+    <h1 class="display-5 fw-bold">Secure Digital Security Platform</h1>
+    <p class="lead col-lg-8 mx-auto">
+      CyberShield brings encrypted file storage, password strength analysis,
+      digital signature verification, and two-factor authentication together
+      in a single, integrated security suite.
+    </p>
+    <div class="mt-4">
+      <a href="{{ url_for('auth.register') }}" class="btn btn-cs-accent btn-lg me-2">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-3">
+      <div class="cs-card h-100 p-4 text-center">
+        <i class="bi bi-file-earmark-lock2-fill cs-icon"></i>
+        <h5 class="mt-3">Secure File Storage</h5>
+        <p class="text-muted small">Upload files with automatic AES-256-GCM envelope encryption, and download them
+          decrypted on demand.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="cs-card h-100 p-4 text-center">
+        <i class="bi bi-key-fill cs-icon"></i>
+        <h5 class="mt-3">Password Checker</h5>
+        <p class="text-muted small">Real-time strength scoring, crack-time estimation, and actionable suggestions.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="cs-card h-100 p-4 text-center">
+        <i class="bi bi-pen-fill cs-icon"></i>
+        <h5 class="mt-3">Digital Signatures</h5>
+        <p class="text-muted small">RSA-2048 + SHA-256 signing and verification that instantly detects document
+          tampering.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="cs-card h-100 p-4 text-center">
+        <i class="bi bi-shield-check cs-icon"></i>
+        <h5 class="mt-3">Two-Factor Auth</h5>
+        <p class="text-muted small">Email OTP and authenticator-app (TOTP + QR) based 2FA to lock down every login.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <div class="row align-items-center">
+    <div class="col-lg-6">
+      <h2 class="fw-bold mb-3">Why CyberShield?</h2>
+      <ul class="list-unstyled cs-check-list">
+        <li><i class="bi bi-check-circle-fill"></i> One integrated platform instead of four disconnected tools</li>
+        <li><i class="bi bi-check-circle-fill"></i> Industry-standard cryptography (AES-256-GCM, RSA-2048, SHA-256,
+          bcrypt)</li>
+        <li><i class="bi bi-check-circle-fill"></i> Full audit trail of every security-relevant action</li>
+        <li><i class="bi bi-check-circle-fill"></i> Built with security best practices: CSRF, XSS &amp; SQLi protection,
+          rate limiting</li>
+      </ul>
+    </div>
+    <div class="col-lg-6 text-center">
+      <i class="bi bi-shield-lock-fill" style="font-size: 12rem; color: var(--cs-accent); opacity:.85;"></i>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
